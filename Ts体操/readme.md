@@ -82,6 +82,9 @@ type ab = { name: "sdad" } extends { ref?: unknown } ? true : false; // false
 
 - 当你写 type a = {name:'sdad',ref:''} extends {ref?:unknown} ? true:false 时，它的意思是将类型 { name: 'sdad', ref: '' } 和类型 { ref?: unknown } 进行比较，看看前者是否可以被视为后者的子类型。如果能够被视为子类型，返回值为 true，否则返回值为 false。由于类型 {name: 'sdad', ref: ''} 中包含了一个空字符串类型的 ref 属性，而父类型 { ref?: unknown } 中只有一个可选的 ref 属性，因此子类型中的 ref 属性可以被赋值为任何类型，满足父类型定义的要求。同时，子类型也包含了一个必需的 name 属性，这是父类型所没有的。因此，在 TypeScript 中，{name:'sdad',ref:''} 可以被认为是 { ref?: unknown } 的子类型，继承关系存在，返回值为 true。而当你写 type ab = {name:'sdad'} extends {ref?:unknown} ? true:false 时，它的意思是将类型 { name: 'sdad' } 和类型 { ref?: unknown } 进行比较，看看前者是否可以被视为后者的子类型。由于类型 {name: 'sdad'} 中没有 ref 属性，而父类型 { ref?: unknown } 中包含了一个可选的 ref 属性，因此子类型中缺少了父类型的一个可选属性，不满足父类型定义的要求，继承关系不存在，返回值为 false。总之，当子类型包含了父类型所有属性，并保持相同或更宽松的属性类型（如从必需变为可选），就可以被认为是父类型的子类型。反之，当子类型中缺少了任何一个父类型的属性，就不能被认为是父类型的子类型。
 
+## 递归
+- 递归是把问题分解成一个个子问题，通过解决一个个子问题来解决整个问题。形式是不断的调用函数自身，直到满足结束条件。
+- 在 TypeScript 类型系统中的高级类型也同样支持递归，在类型体操中，遇到数量不确定的问题，要条件反射的想到递归。 比如数组长度不确定、字符串长度不确定、索引类型层数不确定等。
 ## 技巧
 
 ### 模式匹配
@@ -91,3 +94,12 @@ type ab = { name: "sdad" } extends { ref?: unknown } ? true : false; // false
 ### 重新构造做变换
 
 - TypeScript 的 type、infer、类型参数声明的变量都不能修改，想对类型做各种变换产生新的类型就需要重新构造
+
+### 递归复用做循环
+
+### 数组长度做计数
+- TypeScript 类型系统中没有加减乘除运算符，但是可以通过构造不同的数组然后取 length 的方式来完成数值计算，把数值的加减乘除转化为对数组的提取和构造。
+
+
+### 联合分散可简化
+
