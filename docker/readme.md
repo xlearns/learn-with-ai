@@ -56,7 +56,7 @@
 ```
 FROM nginx:1.23.1
 COPY ./dist  /usr/share/nginx/html/
-COPY ./dist/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 ```
 #### 目录结构
 ├── Dockerfile
