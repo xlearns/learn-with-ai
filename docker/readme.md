@@ -49,3 +49,26 @@
 
 ### docker load 与 docker import的区别
 - 用户既可以使用 docker load 来导入镜像存储文件到本地镜像库，也可以使用 docker import 来导入一个容器快照到本地镜像库。这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也要大。此外，从容器快照文件导入时可以重新指定标签等元数据信息。
+
+
+### Dockerfile
+#### 最小nginx部署配置
+```
+FROM nginx:1.23.1
+COPY ./dist  /usr/share/nginx/html/
+COPY ./dist/nginx.conf /etc/nginx/nginx.conf
+```
+#### 目录结构
+├── Dockerfile
+├── nginx.conf
+├── dist
+│   ├── index.html
+│   └── src
+│       ├── index.js
+│       └── style.css
+
+#### 基于dockerfile构建镜像
+- `docker build -t myDocker .`
+
+#### 根据镜像生成容器
+- `docker run -p 80:80 myDocker`
