@@ -32,6 +32,12 @@
 ### 查看容器输出的结果
 - `docker container logs [container ID or NAMES]`
 
+### 移动系统文件到容器中
+- `docker cp [file_path] [container_id]:[destination_path]`
+
+#### 移动dist目下得文件到48容器内得usr/share/nginx/html/目录下
+- docker cp dist/.   48:usr/share/nginx/html/
+
 ### 选项
 - `-t`
   - 让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上
