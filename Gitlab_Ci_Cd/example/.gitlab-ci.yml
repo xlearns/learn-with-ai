@@ -1,0 +1,25 @@
+before_script:
+  - echo "before_script..."
+  - docker version
+  # DOCKER_USER DOCKER_PASSWORD DOCKER_REGISTRY 这些变量需要在gitlab上有
+  - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+
+stages:
+  - test
+  - build
+  - deploy
+
+deploy:
+  stage: deploy
+  tags:
+    - shell
+  script:
+    - echo "starting build project..."
+    - mvn clean package -DskipTests=true
+    - pwd
+    - ls -a
+
+
+  only:
+    # 在哪个分支有效
+    - master
