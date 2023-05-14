@@ -34,7 +34,17 @@
 
 - 交叉类型（Intersection）类似 js 中的与运算符 &，但是作用于类型，代表对类型做合并
 - 同一类型可以合并，不同的类型没法合并，会被舍弃
+### 一些情况
+```ts
+type test1Type =  {name:string} & {age:number}   // {name:string,age:number}
 
+type test2Type = string & {age:number}    // never
+
+type test3Type = string & number   // never
+
+type test11Type =  {name:string} & {name:number}  // never
+
+```
 ## Index Type
 
 - 映射类型
