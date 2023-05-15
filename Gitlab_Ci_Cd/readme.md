@@ -49,6 +49,7 @@ $ sudo yum install gitlab-ci-multi-runner
 stages:
   - build
   - test
+  - job3
 
 job1:
   stage: build
@@ -59,6 +60,15 @@ job2:
   stage: test
   script:
     - echo "This is job2"
+
+job3:
+  stage: job3
+  before_script:
+  - echo "Before script section"
+  script:
+    - echo "script section"
+  after_script:
+    - echo "script after"
 ```
 
 ## 自动部署
