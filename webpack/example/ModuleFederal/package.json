@@ -1,0 +1,16 @@
+{
+  "name": "modulefederal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run kill-dev && npx pnpm@6 run --parallel dev",
+    "kill-dev": "kill-port --port 3001,3002"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "kill-port": "^2.0.1"
+  }
+}

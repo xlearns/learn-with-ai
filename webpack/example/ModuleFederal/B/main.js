@@ -6,7 +6,7 @@ import Button from 'app_a/Button';
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    <Button>Hello World!</Button>
+    <Button />
   </React.StrictMode>,
   document.getElementById('root')
 );
