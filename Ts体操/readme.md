@@ -14,6 +14,16 @@
 - 凡是 interface 定义的，格式都为 I + Xxxx，例如 IPerson
 - 凡是 type 定义的，格式都为 Xxxx + Type，例如 PersonType
 
+## any
+
+### 如何判断是否是 any
+
+- any 类型与任何类型的交叉都是 any，也就是 1 & any 结果是 any
+
+```ts
+type IsAny<T> = "A" extends "B" & T ? true : false;
+```
+
 ## Tuple
 
 - 元组（Tuple）就是元素个数和类型固定的数组类型
@@ -26,6 +36,21 @@
 
 - 联合类型（Union）类似 js 里的或运算符 |，但是作用于类型，代表类型可以是几个类型之一
 
+### 是否是 Union 类型
+
+- A extends A 不是没意义，意义是取出联合类型中的单个类型放入 A
+- A extends A 才是分布式条件类型， [A] extends [A] 就不是了，只有左边是单独的类型参数才可以。
+
+```ts
+type IsUnion<A, B = A> = A extends A ? ([B] extends [A] ? false : true) : never;
+```
+
+### 数组转换 union 类型
+
+```ts
+type ArrToUnion = ["a", "b"][number];
+```
+
 ## in
 
 - `in `是用于遍历联合类型的运算符
@@ -34,17 +59,19 @@
 
 - 交叉类型（Intersection）类似 js 中的与运算符 &，但是作用于类型，代表对类型做合并
 - 同一类型可以合并，不同的类型没法合并，会被舍弃
+
 ### 一些情况
+
 ```ts
-type test1Type =  {name:string} & {age:number}   // {name:string,age:number}
+type test1Type = { name: string } & { age: number }; // {name:string,age:number}
 
-type test2Type = string & {age:number}    // never
+type test2Type = string & { age: number }; // never
 
-type test3Type = string & number   // never
+type test3Type = string & number; // never
 
-type test11Type =  {name:string} & {name:number}  // never
-
+type test11Type = { name: string } & { name: number }; // never
 ```
+
 ## Index Type
 
 - 映射类型
@@ -93,8 +120,10 @@ type ab = { name: "sdad" } extends { ref?: unknown } ? true : false; // false
 - 当你写 type a = {name:'sdad',ref:''} extends {ref?:unknown} ? true:false 时，它的意思是将类型 { name: 'sdad', ref: '' } 和类型 { ref?: unknown } 进行比较，看看前者是否可以被视为后者的子类型。如果能够被视为子类型，返回值为 true，否则返回值为 false。由于类型 {name: 'sdad', ref: ''} 中包含了一个空字符串类型的 ref 属性，而父类型 { ref?: unknown } 中只有一个可选的 ref 属性，因此子类型中的 ref 属性可以被赋值为任何类型，满足父类型定义的要求。同时，子类型也包含了一个必需的 name 属性，这是父类型所没有的。因此，在 TypeScript 中，{name:'sdad',ref:''} 可以被认为是 { ref?: unknown } 的子类型，继承关系存在，返回值为 true。而当你写 type ab = {name:'sdad'} extends {ref?:unknown} ? true:false 时，它的意思是将类型 { name: 'sdad' } 和类型 { ref?: unknown } 进行比较，看看前者是否可以被视为后者的子类型。由于类型 {name: 'sdad'} 中没有 ref 属性，而父类型 { ref?: unknown } 中包含了一个可选的 ref 属性，因此子类型中缺少了父类型的一个可选属性，不满足父类型定义的要求，继承关系不存在，返回值为 false。总之，当子类型包含了父类型所有属性，并保持相同或更宽松的属性类型（如从必需变为可选），就可以被认为是父类型的子类型。反之，当子类型中缺少了任何一个父类型的属性，就不能被认为是父类型的子类型。
 
 ## 递归
+
 - 递归是把问题分解成一个个子问题，通过解决一个个子问题来解决整个问题。形式是不断的调用函数自身，直到满足结束条件。
 - 在 TypeScript 类型系统中的高级类型也同样支持递归，在类型体操中，遇到数量不确定的问题，要条件反射的想到递归。 比如数组长度不确定、字符串长度不确定、索引类型层数不确定等。
+
 ## 技巧
 
 ### 模式匹配
@@ -108,8 +137,7 @@ type ab = { name: "sdad" } extends { ref?: unknown } ? true : false; // false
 ### 递归复用做循环
 
 ### 数组长度做计数
+
 - TypeScript 类型系统中没有加减乘除运算符，但是可以通过构造不同的数组然后取 length 的方式来完成数值计算，把数值的加减乘除转化为对数组的提取和构造。
 
-
 ### 联合分散可简化
-
