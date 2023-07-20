@@ -16,7 +16,112 @@
 
 ## axios 源码分析
 
-## vue3 vs vue2
+## 说说你对 spa 的理解
+
+- spa 其实很早之前就有了，比如 jq 时期的 backbone，不过当时由于 seo 等原因并不流行。后面随着 react、vue 的出现渐渐成为了主流
+- spa 与 mpa 的区别，mpa 的每个页面都是一个主页面，都是独立的当我们在访问另一个页面的时候，都需要重新加载 html、css、js 文件。当然 mpa 不存在 seo 的问题，spa 首次渲染比较慢，spa 是局部刷新，mpa 为整页刷新。spa 路由可以是 hash / histroy，而 mpa 只能是 history。切换
+
+## vue2 vs vue3
+
+- 全量的 diff -> 根据 patchFlag 做 diff + 最长递增子序列
+- flow -> ts
+- -> monorepo 的代码管理方式（pnpm）
+- Fragment 支持多个根节点
+- options api -> composition api
+- 自定义渲染器 createRenderer() 传入自己的渲染方法， 好处就是我可以根据 vue 核心来实现不同平台的代码
+- 响应式
+
+  - vue2
+    - 1.创建 vue 实例
+    - 2.对 data 定义的数据调用 observe 方法目的是将数据都变成响应式
+    - 3.observe 具体逻辑为，通过 Object.prototype 对 data 进行数据劫持【数组采用了数据劫持】，再 get 收集依赖，具体来说收集的是 watcher，将 watcher 放进 dep 的数组中在代码中就是将 dep.target 的值 push 到 dep 中，dep 是一个 class 用来维护数组提供一些方法比如 notify 便利 dep 数组然后执行里面的 update 函数。在 set 中调用 dep 的 notify 方法
+    - 4.watcher 是一个 class 具体是将实例 this 赋值给 dep.target。而这个 this 其实就是 vue 组件也就是虚拟 dom
+    - 5.模板编译：通过词法分析生产一个一个 tokens。然后通过语法解析将 tokens 生产 ast，优化 ast 将静态节点打上 tag，便于后面 diff 的时候直接忽略，然后生成 render 函数。也就是 this 也就是每一个组件的 render 函数会放到 dep 中
+    - 6.调用 render 函数【比如出发 set】，生成虚拟 dom，如果没有旧节点就直接跳过 diff 直接调用 dom 的 api 渲染到页面上，如果有旧 diff 则找到差异，然后将差异渲染到实际的 dom 上
+  - vue3
+
+    - 宏观来说，vue3 响应式主要是通过 proxy 进行数据劫持，如果读取数据则将副作用函数从桶中取出，设置则往桶里放。通过 weakmap+map 构建了桶结构
+    - 一些 case
+
+      - 分支切换问题
+      - 设置代理对象不存在的属性的时候不应该触发 effect
+      - 调用多个 effect
+      - effect 嵌套
+      - new Set 循环
+
+    - 最外层有个 activeEffect 对象标识当前的 effect，还有个 weakMap 对象 主要是用于存储响应式对象的依赖关系，大概格式为里面包裹着 Map。Map 里面包括则 set，而 set 里面装着 activeEffect
+      - 为什么要这么设计呢
+        - 如果只是一个简单的 set 类型，当向代理对象添加不存在的对象时候，也会触发 effect。而不是根据 effect 里面依赖谁所以将数据结构改成了下面这样
+        - 当访问一个代理对象的时候，会存在 3 部分
+          - weakmap->map->set
+          - 被操作【读取】的代理对象
+          - 被操作【读取】的字段名
+          - 副作用函数 effect
+
+    ```
+     weakmap{
+      map{
+        set[effect,effct]
+      }
+     }
+
+    ```
+
+    - reactive
+      - ES6 Proxy 来拦截对响应对象的访问和修改操作
+      - get 收集依赖核心逻辑为 track
+      - set 触发依赖核心逻辑为 trigger
+    - track
+    - trigger
+    - effect
+    - run
+      - 核心逻辑
+    - stop
+
+    ```js
+    const stack = new WeakMap();
+    let activeEffect;
+    const data = { text: "123" };
+    const obj = new Proxy(data, {
+      get(target, key) {
+        track(target, key);
+        return target[key];
+      },
+      set(target, key, newVal) {
+        target[key] = newVal;
+        trigger(target, key);
+      },
+    });
+    function track(target, key) {
+      let depMap = stack.get(target);
+      if (!depMap) {
+        stack.set(target, (depMap = new Map()));
+      }
+      let deps = depMap.get(key);
+      if (!deps) {
+        depMap.set(key, (deps = new Set()));
+      }
+      deps.add(activeEffect);
+    }
+    function trigger(target, key) {
+      const depMap = stack.get(target);
+      if (!depMap) return;
+      const effects = depMap.get(key);
+      effects && effects.forEach((fn) => fn());
+    }
+    function effect(fn) {
+      activeEffect = fn;
+      fn();
+    }
+    effect(() => {
+      console.log("effet render");
+      document.body.innerHTML = obj.text;
+    });
+    setTimeout(() => {
+      console.log(1);
+      obj.text = "hellow world";
+    }, 1000);
+    ```
 
 ## vue vs react
 
@@ -31,9 +136,11 @@
   - 单向数据流
 - 个人体验
 
-## 类型转换机制
-
 ## == 与 === 区别
+
+- "==" 运算符是相等算符，用比较两个值是否相等。它会进行类型转换，然后再较值。如果两个值的类型不同它会尝试将它们转换为相同类型，然后再进行比较使用"===" 运算符可以更确地比较两个值是否相等，而不会受到类型转换的影响
+
+## 类型转换机制
 
 ## this 的理解
 
