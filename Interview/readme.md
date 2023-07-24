@@ -1,3 +1,45 @@
+# GraphQL
+
+## 如何缓存
+
+## N+1 问题解决方案
+
+- 是什么
+- dataLoader
+  - dataLoader 为什么可以解决 graphql 的 n+1 问题的
+
+# node 与 nest
+
+## 说说对 Node 中的 process 的理解？有哪些常用方法？
+
+## 说说对 Node 中的 fs 模块的理解? 有哪些常用方法
+
+## 说说对 Node 中的 Buffer 的理解？应用场景？
+
+## 说说对 Node 中的 Stream 的理解？应用场景？
+
+## 说说 Node 中的 EventEmitter? 如何实现一个 EventEmitter?
+
+## 说说对 Nodejs 中的事件循环机制理解?
+
+# webpack
+
+## webpack 的理解
+
+## webpack 构建流程
+
+## loader 与 plugin 区别
+
+## 编写 Loader，Plugin 的思路？
+
+## 如何借助 webpack 来优化前端性能？
+
+## 如何提高 webpack 的构建速度？
+
+## webpack vs vite vs rollup
+
+## 说说 webpack proxy 工作原理？为什么能解决跨域?
+
 # css
 
 ## 盒模型
@@ -135,6 +177,8 @@
   - 双向数据绑定
   - 单向数据流
 - 个人体验
+
+## typeof 与 instanceof 区别
 
 ## == 与 === 区别
 
