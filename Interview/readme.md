@@ -79,6 +79,24 @@
 
 ## 盒模型
 
+- 标准盒模型
+  - 内容宽度 = content
+- ie 盒模型
+
+  - 内容宽度= content + border + padding
+
+- box-sizing
+  - content-box
+    - 标准盒模型
+  - border-box
+    - ie 盒模型
+
+## CSS 选择器有哪些？哪些属性可以继承？
+
+## CSS 优先级算法如何计算
+
+## 如何居中 div？如何居中⼀个浮动元素？如何让绝对定位的 div 居中？
+
 ## bfc
 
 ## 隐藏元素
