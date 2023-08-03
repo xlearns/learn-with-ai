@@ -61,19 +61,160 @@ function print(s) {
 // }
 // print(threeSum([-1, 0, 1, 2, -1, -4]));
 
-function removeDuplicates(arrs) {
-  let l = arrs.length;
-  let slow = 0;
+// function removeDuplicates(arrs) {
+//   let l = arrs.length;
+//   let slow = 0;
 
-  //i as fast
-  for (let i = 0; i < l; i++) {
-    if (arrs[i] != arrs[slow]) {
-      slow++;
-      arrs[slow] = arrs[i];
-    }
-  }
+//   //i as fast
+//   for (let i = 0; i < l; i++) {
+//     if (arrs[i] != arrs[slow]) {
+//       slow++;
+//       arrs[slow] = arrs[i];
+//     }
+//   }
 
-  return arrs.slice(0, slow + 1);
-}
+//   return arrs.slice(0, slow + 1);
+// }
 
-print(removeDuplicates([4, 4, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4]));
+// print(removeDuplicates([4, 4, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4]));
+
+// function permute(list) {
+//   const result = [];
+
+//   const backtrack = (arrs) => {
+//     if (arrs.length === list.length) {
+//       result.push([...arrs]);
+//       return;
+//     }
+
+//     for (arr of list) {
+//       arrs.push(arr);
+//       backtrack(arrs);
+//       arrs.pop();
+//     }
+//   };
+//   backtrack([]);
+
+//   return result;
+// }
+
+// print(permute([1, 2, 3]));
+
+// const res = [];
+// function backtrack(arrs, list) {
+//   if (arrs.length == list.length) {
+//     res.push([...arrs]);
+//     return;
+//   }
+
+//   for (arr of list) {
+//     if (arrs.includes(arr)) continue;
+//     arrs.push(arr);
+//     backtrack(arrs, list);
+//     arrs.pop();
+//   }
+
+//   return res;
+// }
+
+// print(backtrack([], [1, 2, 3]));
+
+// function solveNQueens(n) {
+//   // 回溯
+//   let res = [];
+//   const find = (row, tmp = []) => {
+//     if (row === n) {
+//       // 找完了 n-1就已经最后一行了 tmp就是所有的拜访位置
+//       res.push(
+//         tmp.map((c) => {
+//           let arr = new Array(n).fill(".");
+//           arr[c] = "Q";
+//           return arr.join("");
+//         })
+//       );
+//     }
+
+//     for (let col = 0; col < n; col++) {
+//       const cantSet = tmp.some((ci, ri) => {
+//         // 相同位置 或者 和对角线
+//         return ci === col || ri - ci === row - col || ri + ci === row + col;
+//       });
+//       if (cantSet) {
+//         continue;
+//       }
+//       // 如果能放，直接下一行
+//       find(row + 1, [...tmp, col]);
+//     }
+//   };
+
+//   find(0);
+//   return res;
+// }
+
+// function solveNQueens(n) {
+//   const board = new Array(n).fill(0).map(() => new Array(n).fill("."));
+//   const result = [];
+
+//   const isValid = (row, col) => {
+//     // Check column
+//     for (let i = 0; i < row; i++) {
+//       if (board[i][col] === "Q") {
+//         return false;
+//       }
+//     }
+//     // Check main diagonal (top-left to bottom-right)
+//     for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+//       if (board[i][j] === "Q") {
+//         return false;
+//       }
+//     }
+//     // Check anti-diagonal (top-right to bottom-left)
+//     for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+//       if (board[i][j] === "Q") {
+//         return false;
+//       }
+//     }
+//     return true;
+//   };
+//   const backtrack = (row) => {
+//     if (row === n) {
+//       //遍历完成
+//       const solution = board.map((row) => row.join(""));
+//       result.push(solution);
+//       return;
+//     }
+
+//     for (let col = 0; col < n; col++) {
+//       if (isValid(row, col)) {
+//         board[row][col] = "Q";
+//         backtrack(row + 1);
+//         board[row][col] = ".";
+//       }
+//     }
+//   };
+
+//   backtrack(0);
+
+//   return result;
+// }
+// print(solveNQueens(4));
+
+// function simplifyPath(path) {
+//   let stack = [];
+//   let paths = path.split("/");
+
+//   for (let i = 0; i < paths.length; i++) {
+//     const p = paths[i];
+//     if (p == "..") {
+//       stack.pop();
+//     } else if (p && p != ".") {
+//       stack.push(p);
+//     }
+//   }
+
+//   return "/" + stack.join("/");
+// }
+
+// print(simplifyPath("/a/./b/../../c/"));
+// print(simplifyPath("/home/"));
+// print(simplifyPath("/home//foo/"));

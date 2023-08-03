@@ -231,10 +231,122 @@ function removeDuplicates(arrs) {
 
 # 46.全排列
 
+```test
+[1, 2, 3]
+```
+
+```js
+const res = [];
+function backtrack(arrs, list) {
+  if (arrs.length == list.length) {
+    res.push([...arrs]);
+    return;
+  }
+
+  for (arr of list) {
+    if (arrs.includes(arr)) continue;
+    arrs.push(arr);
+    backtrack(arrs, list);
+    arrs.pop();
+  }
+
+  return res;
+}
+
+print(backtrack([], [1, 2, 3]));
+```
+
 # 51.n 皇后
+
+```js
+function solveNQueens(n) {
+  // 回溯
+  let res = [];
+  const find = (row, tmp = []) => {
+    if (row === n) {
+      // 找完了 n-1就已经最后一行了 tmp就是所有的拜访位置
+      res.push(
+        tmp.map((c) => {
+          let arr = new Array(n).fill(".");
+          arr[c] = "Q";
+          return arr.join("");
+        })
+      );
+    }
+
+    for (let col = 0; col < n; col++) {
+      const cantSet = tmp.some((ci, ri) => {
+        // 相同位置 或者 和对角线
+        return ci === col || ri - ci === row - col || ri + ci === row + col;
+      });
+      if (cantSet) {
+        continue;
+      }
+      // 如果能放，直接下一行
+      find(row + 1, [...tmp, col]);
+    }
+  };
+
+  find(0);
+  return res;
+}
+```
 
 # 71.简化路径
 
+- 该问题的核心思想是使用栈（Stack）来处理路径的组成部分。在遍历路径时，我们将路径按照分隔符（"/"）拆分为各个部分，然后根据当前部分的内容进行判断处理。
+
+```js
+function simplifyPath(path) {
+  let stack = [];
+  let paths = path.split("/");
+
+  for (let i = 0; i < paths.length; i++) {
+    const p = paths[i];
+    if (p == "..") {
+      stack.pop();
+    } else if (p && p != ".") {
+      stack.push(p);
+    }
+  }
+
+  return "/" + stack.join("/");
+}
+```
+
+```
+Input: "/home/"
+Output: "/home"
+
+Input: "/a/./b/../../c/"
+Output: "/c"
+
+Input: "/../"
+Output: "/"
+
+Input: "/home//foo/"
+Output: "/home/foo"
+```
+
 # 79.单词搜索
+
+```
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+word = "ABCCED"
+Output: true
+
+word = "SEE"
+Output: true
+
+word = "ABCB"
+Output: false
+
+```
 
 # 94.二叉树的中序遍历
