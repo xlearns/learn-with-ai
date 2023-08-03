@@ -233,6 +233,10 @@
 
 ## typeof 与 instanceof 区别
 
+## 为什么箭头函数没有 prototype，但是其原型却指向 Function.prototype
+
+- 由于箭头函数没有自己的 prototype 属性，所以也不能通过箭函数来创建对象实例,在 JavaScript 中，所有的函数都是 Function 对象的实例，包括箭头函数。
+
 ## == 与 === 区别
 
 - "==" 运算符是相等算符，用比较两个值是否相等。它会进行类型转换，然后再较值。如果两个值的类型不同它会尝试将它们转换为相同类型，然后再进行比较使用"===" 运算符可以更确地比较两个值是否相等，而不会受到类型转换的影响
@@ -244,6 +248,46 @@
 ## js 事件模型
 
 ## new 原理
+
+- 创建一个空对象
+  - `var obj = {}`
+- 将新对象的原型指向构造函数的原型对象上
+  - `obj.__proto__ = 构造函数.prototype`
+- 将构造函数的 this 指向新对象
+  - `var fn = 构造函数.bind(this)`
+- 执行构造函数内部的代码
+  - `var result = fn(...args)`
+- 如果构造函数返回的不是对象则返回新对象
+  - `typeof result == 'object'?result:obj`
+
+```js
+function miniNew(constructor, ...args) {
+  const obj = Object.create(constructor.prototype);
+  const result = constructor.applty(obj, ...args);
+  return typeof result == "object" ? result : obj;
+}
+```
+
+## Object.create 的 polyfill
+
+```js
+function miniObjectCreate(proto) {
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+```
+
+## Object.setPrototypeOf 的 polyfill
+
+```js
+function setPrototypeOf(obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+}
+```
+
+## 为什么 Function.prototype == Function.**proto**为 true
 
 ## bind call apply 原理
 
@@ -319,6 +363,7 @@
 
 ## 什么是原理链
 
+- ![原理链](./image/L3Byb3h5L2h0dHBzL2ltYWdlczIwMTguY25ibG9ncy5jb20vYmxvZy8xMjc5NTI2LzIwMTcxMS8xMjc5NTI2LTIwMTcxMTI3MjA1NzE2ODE1LTE4NTMwOTY0MzAuanBn.jpg)
 - 对比 java 原型链的区别：
   - 与 java 这种类继承机制不同：
     - js 的原型链非常灵活，它运行对象可以再运行时动态 crud 属性方法
