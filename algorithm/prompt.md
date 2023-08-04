@@ -350,3 +350,86 @@ Output: false
 ```
 
 # 94.二叉树的中序遍历
+
+```js
+// 递归
+function inorderTraversal(root) {
+  if (!root) {
+    return [];
+  }
+
+  const result = [];
+
+  function inorder(node) {
+    if (!node) {
+      return;
+    }
+    inorder(node.left);
+    result.push(node.val);
+    inorder(node.right);
+  }
+
+  inorder(root);
+
+  return result;
+}
+```
+
+```js
+// 迭代
+function inorderTraversal(root) {
+  // 如果二叉树为空，直接返回空数组
+  if (!root) {
+    return [];
+  }
+
+  // 创建一个空数组 result，用于保存遍历结果
+  const result = [];
+
+  // 创建一个空栈 stack，用于辅助迭代遍历
+  const stack = [];
+
+  // 创建一个指针 node，指向当前正在遍历的节点，初始时指向根节点
+  let node = root;
+
+  // 进入循环，当指针 node 不为空或栈不为空时，继续遍历
+  while (node || stack.length > 0) {
+    // 循环将当前节点 node 和它的左子节点一直压入栈中，直到左子树为空
+    while (node) {
+      stack.push(node);
+      node = node.left;
+    }
+
+    // 当左子树为空时，从栈中弹出一个节点，它是当前中序遍历的下一个节点
+    node = stack.pop();
+
+    // 将当前节点的值加入结果数组中
+    result.push(node.val);
+
+    // 将指针指向当前节点的右子节点，下一轮循环将遍历右子树
+    node = node.right;
+  }
+
+  // 返回中序遍历结果数组
+  return result;
+}
+```
+
+# 509.斐波那契数
+
+```
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55
+word = 3
+Output = 2
+```
+
+```js
+function fib(n) {
+  // 第 n 个数字等于第 n-1 和第 n-2 个数字的和。
+  if (n == 0) return 0;
+  else if (n == 1) return 1;
+  else return fib(n - 1) + fib(n - 2);
+}
+
+print(fib(4));
+```

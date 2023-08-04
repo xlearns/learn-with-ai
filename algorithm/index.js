@@ -218,3 +218,72 @@ function print(s) {
 // print(simplifyPath("/a/./b/../../c/"));
 // print(simplifyPath("/home/"));
 // print(simplifyPath("/home//foo/"));
+
+//
+// function fib(n) {
+//   // 第 n 个数字等于第 n-1 和第 n-2 个数字的和。
+//   if (n == 0) return 0;
+//   else if (n == 1) return 1;
+//   else return fib(n - 1) + fib(n - 2);
+// }
+
+// print(fib(4));
+
+class TreeNode {
+  constructor(val, left = null, right = null) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+// 构建二叉树
+const root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.right = new TreeNode(3);
+root.left.left = new TreeNode(4);
+root.left.right = new TreeNode(5);
+root.right.left = new TreeNode(6);
+root.right.right = new TreeNode(7);
+
+// function inorderTraversal(root) {
+//   if (!root) {
+//     return [];
+//   }
+
+//   const result = [];
+
+//   function inorder(node) {
+//     if (!node) {
+//       return;
+//     }
+//     inorder(node.left);
+//     result.push(node.val);
+//     inorder(node.right);
+//   }
+
+//   inorder(root);
+
+//   return result;
+// }
+
+// 迭代
+function inorderTraversal(root) {
+  if (!root) [];
+  const result = [];
+  const stack = [];
+  let node = root;
+  while (node || stack.length > 0) {
+    while (node) {
+      stack.push(node);
+      node = node.left;
+    }
+    node = stack.pop();
+    result.push(node.val);
+    node = node.right;
+  }
+
+  return result;
+}
+
+print(inorderTraversal(root));
