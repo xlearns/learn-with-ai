@@ -433,3 +433,99 @@ function fib(n) {
 
 print(fib(4));
 ```
+
+# 100.相同的树
+
+```js
+function isSameTree(p, q) {
+  // 如果p和q都是null，空二叉树，那么他们相等
+  if (p == null && q == null) {
+    return true;
+  }
+  if (p == null || q == null) {
+    return false;
+  }
+  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+```
+
+# 104.二叉树的最大深度
+
+```js
+function maxDepth(root) {
+  if (root == null) {
+    return 0;
+  }
+  return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+}
+```
+
+# 110.平衡二叉树
+
+```js
+// 判断树的高度
+function getHeight(node) {
+  if (node === null) {
+    return 0;
+  }
+  return Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+}
+
+function isBalanced(root) {
+  if (root === null) {
+    return true; // 空树也是平衡的
+  }
+
+  // 检查当前节点的左右子树高度差是否超过 1
+  if (Math.abs(getHeight(root.left) - getHeight(root.right)) > 1) {
+    return false;
+  }
+
+  return isBalanced(root.left) && isBalanced(root.right);
+}
+```
+
+# 206.反转链表
+
+```js
+function reverseList(head) {
+  const cur = head;
+  const prev = null;
+
+  while (cur != null) {
+    cur.next = prev;
+    prev = cur;
+    cur = cur.next;
+  }
+
+  return prev;
+}
+```
+
+# 226.翻转二叉树
+
+```js
+function invertTree(root) {
+  if (root == null) {
+    return root;
+  }
+  root.left = invertTree(root.right);
+  root.right = invertTree(root.left);
+  return root;
+}
+```
+
+# 179.最大数
+
+- 这个问题可以转化为一个排序问题，但排序的规则需要自定义。具体来说，对于两个数字 a 和 b，我们需要确定它们的排列顺序，以便组成的数字更大。比较的方式是将 ab 和 ba 进行比较，如果 ab 更大，则 a 应该排在 b 前面。
+
+```js
+function largestNumber(nums) {
+  nums.sort((a, b) => `${b}${a}` - `${a}${b}`);
+  return nums[0] === 0 ? "0" : nums.join("");
+}
+```
+
+```
+Input: [3, 30, 34, 5, 9]
+```

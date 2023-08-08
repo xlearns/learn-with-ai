@@ -19,6 +19,18 @@
   - 更丰富的功能
     - RPC 框架通常提了更丰富功能和特性，如服务发现、负载衡、故障复等。这些功能可以帮开发者更轻松构建可靠和扩展的微服务架构。
 
+# http
+
+### ip
+
+- dns 是什么
+- icmp 是什么
+
+### post 与 get 的区别
+
+- 缓存
+- rpc 安全可幂
+
 # GraphQL
 
 ## 如何缓存
@@ -288,6 +300,56 @@ function setPrototypeOf(obj, proto) {
 ```
 
 ## 为什么 Function.prototype == Function.**proto**为 true
+
+## 控制并发请求
+
+```js
+async function concurrentRequest(urls, maxConcurrent, callback) {
+  const results = [];
+  const queue = []; // 队列用于存放待执行的请求
+  let currentCount = 0;
+
+  async function request(url, idx) {
+    currentCount++;
+    console.log(`Sending request to ${url} (Concurrent: ${currentCount})`);
+    const result = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const result = `Response from ${url}`;
+        currentCount--;
+        results[idx] = result; // 将结果存储在正确的索引位置
+        resolve(result);
+      }, 5000);
+    });
+    return result;
+  }
+
+  async function run() {
+    while (queue.length > 0) {
+      const { url, idx } = queue.shift(); // 从队列中取出一个请求
+      await request(url, idx); // 等待请求完成
+      if (queue.length === 0) {
+        callback(results);
+      }
+    }
+  }
+
+  urls.forEach((url, idx) => {
+    queue.push({ url, idx }); // 将请求加入队列
+  });
+
+  // 同时执行不超过 maxConcurrent 个任务
+  for (let i = 0; i < maxConcurrent; i++) {
+    run();
+  }
+}
+
+// 示例数据
+const urls = ["url1", "url2", "url3", "url4", "url5"];
+concurrentRequest(urls, 2, (results) => {
+  console.log("All requests completed:");
+  console.log(results);
+});
+```
 
 ## bind call apply 原理
 
@@ -652,6 +714,16 @@ function setPrototypeOf(obj, proto) {
   - 垃圾回收
     - 在代码执行完成后，引擎会对不再使用的变量和对象进行垃圾回收，释放内存空间。
 
+## v8 编译原理
+
+## single-spa 设计原理
+
+## qiankun 设计原理
+
+## 浏览器的线程和任务
+
+## v8 嵌入式
+
 ## 错误拦截
 
 - 错误类型
@@ -742,4 +814,44 @@ function setPrototypeOf(obj, proto) {
     - 手动上报
   - 拦截
 
-## 基于 gpt 的 api 写了 xx
+## 微服务
+
+### 微前端到底解决了哪些业务问题？
+
+### 社区方案
+
+- iframe
+- npm
+- 动态 script
+- web component
+- iframe cookie
+- ajax cookie
+
+### 原理
+
+- 设计
+- v8 隔离
+- iframe 隔离
+- iframe + proxy 隔离
+- 快照隔离
+- css 隔离
+
+### 架构设计
+
+- 设计要素
+- 构建工具
+- 按需加载
+- 版本发布
+- 代码检查
+- 代码格式
+- 提交规范
+- 并更日志
+- 单元测试
+- 文档设计
+
+### 架构设计
+
+- 状态管理
+- 隔离
+- 性能优化
+- 通信

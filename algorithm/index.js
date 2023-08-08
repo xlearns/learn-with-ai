@@ -268,22 +268,68 @@ root.right.right = new TreeNode(7);
 // }
 
 // 迭代
-function inorderTraversal(root) {
-  if (!root) [];
-  const result = [];
-  const stack = [];
-  let node = root;
-  while (node || stack.length > 0) {
-    while (node) {
-      stack.push(node);
-      node = node.left;
-    }
-    node = stack.pop();
-    result.push(node.val);
-    node = node.right;
+// function inorderTraversal(root) {
+//   if (!root) [];
+//   const result = [];
+//   const stack = [];
+//   let node = root;
+//   while (node || stack.length > 0) {
+//     while (node) {
+//       stack.push(node);
+//       node = node.left;
+//     }
+//     node = stack.pop();
+//     result.push(node.val);
+//     node = node.right;
+//   }
+
+//   return result;
+// }
+
+// print(inorderTraversal(root));
+
+async function concurrentRequest(urls, maxConcurrent, callback) {
+  const results = [];
+  const queue = []; // 队列用于存放待执行的请求
+  let currentCount = 0;
+
+  async function request(url, idx) {
+    currentCount++;
+    console.log(`Sending request to ${url} (Concurrent: ${currentCount})`);
+    const result = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const result = `Response from ${url}`;
+        currentCount--;
+        results[idx] = result; // 将结果存储在正确的索引位置
+        resolve(result);
+      }, 5000);
+    });
+    return result;
   }
 
-  return result;
+  async function run() {
+    while (queue.length > 0) {
+      const { url, idx } = queue.shift(); // 从队列中取出一个请求
+      await request(url, idx); // 等待请求完成
+      if (queue.length === 0) {
+        callback(results);
+      }
+    }
+  }
+
+  urls.forEach((url, idx) => {
+    queue.push({ url, idx }); // 将请求加入队列
+  });
+
+  // 同时执行不超过 maxConcurrent 个任务
+  for (let i = 0; i < maxConcurrent; i++) {
+    run();
+  }
 }
 
-print(inorderTraversal(root));
+// 示例数据
+const urls = ["url1", "url2", "url3", "url4", "url5"];
+concurrentRequest(urls, 2, (results) => {
+  console.log("All requests completed:");
+  console.log(results);
+});
